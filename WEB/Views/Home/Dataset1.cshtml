@@ -1,0 +1,284 @@
+@model WEB.Models.DatasetViewModel
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <div>
+        <h4 class="fw-bold mb-0 text-primary">🧪 @Model.Name</h4>
+        <small class="text-muted">Nguồn: @Model.Source &bull; Nhãn: <code>@Model.TargetColumn</code> (@Model.TargetDescription)</small>
+    </div>
+    <div>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-sm">
+            &larr; Quay lại Menu chọn
+        </a>
+    </div>
+</div>
+
+<!-- 4 Thẻ chỉ số tinh gọn -->
+<div class="row g-2 mb-3">
+    <div class="col-md-3 col-6">
+        <div class="card-metric">
+            <div class="metric-label">Tổng số mẫu</div>
+            <div class="metric-value text-primary">@Model.TotalRows.ToString("N0")</div>
+            <small class="text-muted">3,276 mẫu thực nghiệm</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-metric">
+            <div class="metric-label">Đặc trưng hóa lý</div>
+            <div class="metric-value text-secondary">9</div>
+            <small class="text-muted">pH, Độ cứng, Sulfate, Độ đục...</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-metric">
+            <div class="metric-label">Đặc trưng khuyết</div>
+            <div class="metric-value text-warning">3 / 9</div>
+            <small class="text-muted">Điền bằng KNNImputer (k=5)</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-metric">
+            <div class="metric-label">Mô hình Top 1</div>
+            <div class="metric-value text-success">Decision Tree</div>
+            <small class="text-muted">Test F1: 0.5320 | Acc: 63.26%</small>
+        </div>
+    </div>
+</div>
+
+<!-- Khuyết thiếu & Danh mục 9 chỉ số -->
+<div class="row g-3 mb-3">
+    <!-- Khuyết thiếu -->
+    <div class="col-lg-5">
+        <div class="section-card h-100 mb-0">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>⚠️ Tỷ Lệ Khuyết Thiếu Dữ Liệu</span>
+                <span class="badge bg-warning text-dark">KNNImputer</span>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-striped mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Đặc trưng</th>
+                            <th class="text-end">Mẫu khuyết</th>
+                            <th class="text-end">Tỷ lệ</th>
+                            <th>Xử lý</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model.MissingValues)
+                        {
+                            <tr>
+                                <td><code>@m.Feature</code></td>
+                                <td class="text-end text-danger fw-bold">@m.MissingCount</td>
+                                <td class="text-end fw-bold">@m.Percentage.ToString("F2")%</td>
+                                <td><span class="badge bg-info text-dark">KNNImputer (k=5)</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh mục đặc trưng -->
+    <div class="col-lg-7">
+        <div class="section-card h-100 mb-0">
+            <div class="card-header">
+                <span>📋 Danh Mục 9 Chỉ Số Hóa - Lý Quan Trắc</span>
+            </div>
+            <div class="card-body p-0" style="max-height: 170px; overflow-y: auto;">
+                <table class="table table-sm table-hover mb-0 small">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th>Chỉ số</th>
+                            <th>Đơn vị</th>
+                            <th>Ý nghĩa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var f in Model.Features)
+                        {
+                            <tr>
+                                <td><strong>@f.Name</strong></td>
+                                <td><span class="badge bg-light text-primary border">@f.Unit</span></td>
+                                <td class="text-muted">@f.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaderboard đối chuẩn 5 mô hình -->
+<div class="section-card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong class="text-primary">🏆 Bảng Đối Chuẩn Hiệu Năng 5 Thuật Toán (Leaderboard)</strong>
+        <span class="badge bg-success">Test Set 20% (Stratified)</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover table-striped mb-0 text-center table-leaderboard align-middle">
+                <thead>
+                    <tr>
+                        <th>Hạng</th>
+                        <th class="text-start">Thuật toán</th>
+                        <th>Test F1</th>
+                        <th>Test Recall</th>
+                        <th>Test Precision</th>
+                        <th>Test Accuracy</th>
+                        <th>ROC-AUC</th>
+                        <th>Đánh giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model.Leaderboard)
+                    {
+                        <tr class="@(m.IsBest ? "best-model-row" : "")">
+                            <td>@(m.IsBest ? "🥇 Top 1" : "#" + m.Rank)</td>
+                            <td class="text-start fw-bold">@m.Model</td>
+                            <td class="fw-bold @(m.IsBest ? "text-success" : "")">@m.TestF1.ToString("F4")</td>
+                            <td>@m.TestRecall.ToString("F4")</td>
+                            <td>@m.TestPrecision.ToString("F4")</td>
+                            <td>@((m.TestAccuracy * 100).ToString("F2"))%</td>
+                            <td class="fw-bold">@m.RocAuc.ToString("F4")</td>
+                            <td>
+                                @if (m.IsBest)
+                                {
+                                    <span class="badge bg-primary">F1 cao nhất</span>
+                                }
+                                else if (m.RocAuc >= 0.68)
+                                {
+                                    <span class="badge bg-info text-dark">ROC-AUC cao nhất</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-secondary border">Đối chuẩn</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer bg-light py-1 px-3 small text-muted">
+        @Model.AnalysisSummary
+    </div>
+</div>
+
+<!-- 4 Biểu đồ trực quan hóa (Grid 2x2) -->
+<div class="row g-3 mb-3">
+    <div class="col-md-6">
+        <div class="section-card mb-0">
+            <div class="card-header py-1 px-2 small">📈 Ma Trận Tương Quan (Correlation Heatmap)</div>
+            <div class="card-body text-center p-2">
+                <img src="@Url.Content("~/Content/images/" + Model.Images.Correlation)" alt="Correlation Heatmap" class="img-fluid rounded" style="max-height: 280px;" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="section-card mb-0">
+            <div class="card-header py-1 px-2 small">🎯 Đặc Trưng Quan Trọng (Feature Importance từ Decision Tree)</div>
+            <div class="card-body text-center p-2">
+                <img src="@Url.Content("~/Content/images/" + Model.Images.FeatureImportance)" alt="Feature Importance" class="img-fluid rounded" style="max-height: 280px;" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="section-card mb-0">
+            <div class="card-header py-1 px-2 small">📉 Đường Cong ROC-AUC 5 Thuật Toán</div>
+            <div class="card-body text-center p-2">
+                <img src="@Url.Content("~/Content/images/" + Model.Images.Roc)" alt="ROC Curve" class="img-fluid rounded" style="max-height: 280px;" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="section-card mb-0">
+            <div class="card-header py-1 px-2 small">🔲 Ma Trận Nhầm Lẫn (Confusion Matrix) 5 Thuật Toán</div>
+            <div class="card-body text-center p-2">
+                <img src="@Url.Content("~/Content/images/" + Model.Images.ConfusionMatrix)" alt="Confusion Matrix" class="img-fluid rounded" style="max-height: 280px;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng duyệt dữ liệu mẫu (Client-side DataTables: Tìm kiếm & Phân trang tức thì, KHÔNG BỊ LỖI AJAX) -->
+<div class="section-card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <strong class="text-dark">🔍 Bảng Dữ Liệu Mẫu (Data Explorer)</strong>
+            <small class="text-muted ms-2">(Hiển thị 200 mẫu đầu từ <code>water_potability.csv</code>, tìm kiếm &amp; phân trang trực tiếp)</small>
+        </div>
+        <span class="badge bg-secondary">Client DataTables</span>
+    </div>
+    <div class="card-body p-2">
+        <div class="table-responsive">
+            <table id="dataset1Table" class="table table-sm table-bordered table-striped table-hover mb-0 w-100">
+                <thead class="table-dark">
+                    <tr>
+                        @foreach (var h in Model.Headers)
+                        {
+                            <th>@h</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.SampleRows)
+                    {
+                        <tr>
+                            @for (int i = 0; i < row.Length; i++)
+                            {
+                                var val = row[i];
+                                if (i == row.Length - 1)
+                                {
+                                    <td>
+                                        @if (val == "1")
+                                        {
+                                            <span class="badge bg-success">Uống được (1)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Không (0)</span>
+                                        }
+                                    </td>
+                                }
+                                else if (string.IsNullOrEmpty(val))
+                                {
+                                    <td class="text-muted fst-italic">NaN</td>
+                                }
+                                else
+                                {
+                                    double num;
+                                    <td>@(double.TryParse(val, out num) ? num.ToString("F3") : val)</td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        // Khởi tạo DataTables trực tiếp trên bảng HTML -> Hoạt động 100% offline, không bao giờ gặp lỗi Ajax tn/7
+        $('#dataset1Table').DataTable({
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            language: {
+                search: "Tìm kiếm mọi cột:",
+                lengthMenu: "Hiện _MENU_ dòng / trang",
+                info: "Hiển thị _START_ - _END_ trên _TOTAL_ mẫu",
+                paginate: { next: "Sau", previous: "Trước" }
+            }
+        });
+    });
+</script>
+}

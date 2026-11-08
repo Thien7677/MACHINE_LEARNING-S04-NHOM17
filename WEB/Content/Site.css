@@ -1,0 +1,136 @@
+:root {
+    --primary-color: #0284c7;
+    --border-color: #e2e8f0;
+}
+
+body {
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.body-content {
+    flex: 1 0 auto;
+}
+
+/* Navbar */
+.navbar-nav .nav-link {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #94a3b8 !important;
+    border-radius: 0.375rem;
+    margin-right: 0.25rem;
+    transition: all 0.15s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.navbar-nav .nav-link.active {
+    color: #38bdf8 !important;
+    background-color: rgba(56, 189, 248, 0.12);
+    font-weight: 600;
+}
+
+/* Compact Metrics */
+.card-metric {
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    background: #ffffff;
+    padding: 0.75rem 1rem;
+}
+
+.metric-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+/* Compact Section Cards */
+.section-card {
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    background: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.section-card .card-header {
+    background-color: #f8fafc;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.5rem 0.85rem;
+}
+
+.section-card .card-body {
+    padding: 0.85rem;
+}
+
+/* Leaderboard Highlight */
+.table-leaderboard th {
+    background-color: #f1f5f9;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.4rem 0.5rem;
+}
+
+.table-leaderboard td {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
+}
+
+.table-leaderboard tr.best-model-row {
+    background-color: #ecfdf5 !important;
+    font-weight: 600;
+}
+
+/* Figures */
+.figure-container {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.figure-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.25rem;
+}
+
+/* DataTables Compact */
+table.dataTable thead th {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.5rem;
+    white-space: nowrap;
+}
+
+table.dataTable tbody td {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    font-size: 0.82rem;
+    padding: 0.2rem 0.4rem;
+}
+
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+}

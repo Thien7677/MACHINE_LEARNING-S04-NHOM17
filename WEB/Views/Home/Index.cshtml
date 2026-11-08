@@ -1,0 +1,35 @@
+@{
+    ViewBag.Title = "Menu Chọn Dataset";
+}
+
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-md-8 col-lg-6 text-center">
+        <!-- Tiêu đề -->
+        <h2 class="fw-bold text-primary mb-2">💧 WATERWEB</h2>
+        <p class="text-muted mb-4">Hệ thống phân tích &amp; đánh giá chất lượng nước &bull; Nhóm 17</p>
+
+        <!-- Khung menu chọn -->
+        <div class="card p-4 shadow-sm border bg-white">
+            <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">CHỌN NỘI DUNG BẠN MUỐN XEM:</h5>
+            
+            <div class="d-grid gap-3">
+                <a href="@Url.Action("Dataset1", "Home")" class="btn btn-primary btn-lg py-3 fw-bold fs-5 text-start d-flex justify-content-between align-items-center">
+                    <span>🧪 1. Xem Dataset 1: Hóa - Lý</span>
+                    <span class="badge bg-light text-primary fs-6">3,276 mẫu &rarr;</span>
+                </a>
+
+                <a href="@Url.Action("Dataset2", "Home")" class="btn btn-danger btn-lg py-3 fw-bold fs-5 text-start d-flex justify-content-between align-items-center">
+                    <span>☣️ 2. Xem Dataset 2: Vi sinh &amp; Kim loại</span>
+                    <span class="badge bg-light text-danger fs-6">8,000 mẫu &rarr;</span>
+                </a>
+
+                <a href="@Url.Action("Overview", "Home")" class="btn btn-outline-dark btn-lg py-3 fw-bold fs-6 text-start d-flex justify-content-between align-items-center">
+                    <span>📊 3. Xem Tổng Quan &amp; Đối Chuẩn Pipeline</span>
+                    <span class="badge bg-dark fs-6">&rarr;</span>
+                </a>
+            </div>
+        </div>
+
+        <small class="text-muted d-block mt-3">Chọn 1 trong 3 nút trên để xem toàn bộ thông tin chi tiết của mục tương ứng.</small>
+    </div>
+</div>

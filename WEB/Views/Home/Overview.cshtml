@@ -1,0 +1,180 @@
+@model WEB.Models.ResearchSummary
+@{
+    ViewBag.Title = "Tổng quan & Đối chuẩn Pipeline";
+}
+
+<!-- Header với nút quay lại Menu chọn -->
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <div>
+        <h4 class="fw-bold mb-0 text-dark">📊 Báo Cáo Tổng Quan &amp; Pipeline Thực Nghiệm</h4>
+        <small class="text-muted">Đề tài Machine Learning Nhóm 17 &bull; Nguồn: Google Colab (Nhom17.ipynb)</small>
+    </div>
+    <div>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-sm">
+            &larr; Quay lại Menu chọn
+        </a>
+    </div>
+</div>
+
+<!-- 4 Thẻ tóm tắt nhanh -->
+<div class="row g-2 mb-3">
+    <div class="col-md-3 col-6">
+        <div class="card-metric">
+            <div class="metric-label">Dataset 1 (Hóa - Lý)</div>
+            <div class="metric-value text-primary">@Model.Dataset1.TotalRows.ToString("N0") <span class="fs-6 text-muted fw-normal">mẫu</span></div>
+            <small class="text-muted">9 chỉ số &bull; 3 cột khuyết</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-metric">
+            <div class="metric-label">Top 1 Dataset 1</div>
+            <div class="metric-value text-success">Decision Tree</div>
+            <small class="text-muted">Test F1: 0.5320 | ROC: 0.6300</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-metric">
+            <div class="metric-label">Dataset 2 (Vi sinh)</div>
+            <div class="metric-value text-danger">@Model.Dataset2.TotalRows.ToString("N0") <span class="fs-6 text-muted fw-normal">mẫu</span></div>
+            <small class="text-muted">20 chỉ số &bull; Lọc #NUM!</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-metric">
+            <div class="metric-label">Top 1 Dataset 2</div>
+            <div class="metric-value text-success">XGBoost</div>
+            <small class="text-muted">Test F1: 0.8595 | Acc: 96.81%</small>
+        </div>
+    </div>
+</div>
+
+<!-- Quy trình thực nghiệm & Phân phối nhãn EDA -->
+<div class="row g-3 mb-3">
+    <div class="col-lg-7">
+        <div class="section-card h-100 mb-0">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>⚙️ Quy Trình Pipeline Huấn Luyện (Nhom17.ipynb)</span>
+                <span class="badge bg-secondary">Pipeline chuẩn</span>
+            </div>
+            <div class="card-body">
+                <ol class="list-group list-group-numbered list-group-flush mb-2 small">
+                    @foreach (var step in Model.ProjectInfo.PipelineSteps)
+                    {
+                        var parts = step.Split(new[] { ". " }, 2, StringSplitOptions.None);
+                        var text = parts.Length > 1 ? parts[1] : step;
+                        <li class="list-group-item py-1 px-2 border-0">
+                            @text
+                        </li>
+                    }
+                </ol>
+                <div class="alert alert-light border py-1 px-2 mb-0 small text-muted">
+                    <strong>Kỹ thuật chính:</strong> <code>RobustScaler</code> chống ngoại lai + <code>KNNImputer (k=5)</code> điền khuyết + <code>TomekLinks</code> dọn ranh giới nhãn.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="section-card h-100 mb-0">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>📊 Phân Phối Nhãn Của 2 Bộ Dữ Liệu (EDA)</span>
+                <span class="badge bg-secondary">Target</span>
+            </div>
+            <div class="card-body text-center p-2">
+                <div class="figure-container mb-2">
+                    <img src="@Url.Content("~/Content/images/eda_target_distribution.png")" alt="Phân phối nhãn EDA" class="img-fluid" style="max-height: 190px;" />
+                </div>
+                <div class="row text-start small text-muted g-1">
+                    <div class="col-6">
+                        <strong class="text-primary">Dataset 1:</strong>
+                        <div>0 (Không uống): 1,998 (61%)</div>
+                        <div>1 (Uống được): 1,278 (39%)</div>
+                    </div>
+                    <div class="col-6">
+                        <strong class="text-danger">Dataset 2:</strong>
+                        <div>0 (Không an toàn): 7,084 (88.6%)</div>
+                        <div>1 (An toàn): 912 (11.4%)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- So sánh 2 Leaderboard đặt cạnh nhau -->
+<div class="row g-3">
+    <!-- Leaderboard Dataset 1 -->
+    <div class="col-md-6">
+        <div class="section-card mb-0">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong class="text-primary">🧪 Leaderboard: Dataset 1 (Hóa - Lý)</strong>
+                <a href="@Url.Action("Dataset1", "Home")" class="small text-decoration-none">Xem Dataset 1 &rarr;</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover table-striped mb-0 text-center table-leaderboard">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="text-start">Mô hình</th>
+                                <th>Test F1</th>
+                                <th>Accuracy</th>
+                                <th>ROC-AUC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Dataset1.Leaderboard)
+                            {
+                                <tr class="@(item.IsBest ? "best-model-row" : "")">
+                                    <td>@(item.IsBest ? "🥇" : item.Rank.ToString())</td>
+                                    <td class="text-start">@item.Model</td>
+                                    <td class="fw-bold @(item.IsBest ? "text-success" : "")">@item.TestF1.ToString("F4")</td>
+                                    <td>@((item.TestAccuracy * 100).ToString("F2"))%</td>
+                                    <td>@item.RocAuc.ToString("F4")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Dataset 2 -->
+    <div class="col-md-6">
+        <div class="section-card mb-0">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong class="text-danger">☣️ Leaderboard: Dataset 2 (Vi sinh &amp; Kim loại)</strong>
+                <a href="@Url.Action("Dataset2", "Home")" class="small text-decoration-none">Xem Dataset 2 &rarr;</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover table-striped mb-0 text-center table-leaderboard">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="text-start">Mô hình</th>
+                                <th>Test F1</th>
+                                <th>Accuracy</th>
+                                <th>ROC-AUC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Dataset2.Leaderboard)
+                            {
+                                <tr class="@(item.IsBest ? "best-model-row" : "")">
+                                    <td>@(item.IsBest ? "🥇" : item.Rank.ToString())</td>
+                                    <td class="text-start">@item.Model</td>
+                                    <td class="fw-bold @(item.IsBest ? "text-success" : "")">@item.TestF1.ToString("F4")</td>
+                                    <td>@((item.TestAccuracy * 100).ToString("F2"))%</td>
+                                    <td>@item.RocAuc.ToString("F4")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
