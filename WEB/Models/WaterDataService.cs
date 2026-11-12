@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace WEB.Models
                 string jsonPath = Path.Combine(appDataPath, "research_summary.json");
                 if (File.Exists(jsonPath))
                 {
-                    string json = File.ReadAllText(jsonPath);
+                    string json = File.ReadAllText(jsonPath, System.Text.Encoding.UTF8);
                     _cachedSummary = JsonConvert.DeserializeObject<ResearchSummary>(json);
                 }
                 else
@@ -78,7 +78,7 @@ namespace WEB.Models
 
                 if (File.Exists(filePath))
                 {
-                    using (var reader = new StreamReader(filePath))
+                    using (var reader = new StreamReader(filePath, System.Text.Encoding.UTF8))
                     {
                         string headerLine = reader.ReadLine();
                         if (!string.IsNullOrEmpty(headerLine))
