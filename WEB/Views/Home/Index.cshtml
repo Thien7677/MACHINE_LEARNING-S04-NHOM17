@@ -1,5 +1,6 @@
-@{
-    ViewBag.Title = "Menu Chọn Dataset";
+﻿@{
+    ViewBag.Title = "Menu chọn Dataset";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="row justify-content-center align-items-center" style="min-height: 75vh;">
@@ -11,7 +12,7 @@
         <!-- Khung menu chọn -->
         <div class="card p-4 shadow-sm border bg-white">
             <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">CHỌN NỘI DUNG BẠN MUỐN XEM:</h5>
-            
+
             <div class="d-grid gap-3">
                 <a href="@Url.Action("Dataset1", "Home")" class="btn btn-primary btn-lg py-3 fw-bold fs-5 text-start d-flex justify-content-between align-items-center">
                     <span>🧪 1. Xem Dataset 1: Hóa - Lý</span>
